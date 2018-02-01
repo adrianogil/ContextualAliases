@@ -39,11 +39,19 @@ elif len(sys.argv) == 3:
         if row is None:
             print 'No contextual action found!'
         else:
-            contextual_cmd = row[0]
+            env_str = 'source ' + os.environ['HOME']+'/.profile && '
+            contextual_cmd = env_str + row[0]
             print("Contextual action: " + contextual_cmd + '\n')
-            cmd_output = subprocess.check_output(contextual_cmd, shell=True)
-            print cmd_output
-
+            # cmd_output = subprocess.check_output(contextual_cmd, shell=True, executable='/bin/bash')
+            # print cmd_output
+            process = subprocess.Popen(contextual_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, executable='/bin/bash')
+            while True:
+                out = process.stdout.read(1)
+                if out == '' and process.poll() != None:
+                    break
+                if out != '':
+                    sys.stdout.write(out)
+                    sys.stdout.flush()
 elif len(sys.argv) == 2:
     if (sys.argv[1] == '--update' or sys.argv[1] == '-u'):
         c.execute("SELECT DISTINCT aliases from ContextualActionsByKey ORDER BY aliases")
