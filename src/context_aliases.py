@@ -33,15 +33,26 @@ if len(sys.argv) == 4:
         conn.commit()
         print('Saved')
 elif len(sys.argv) == 3:
-    if (sys.argv[1] == '--exec' or sys.argv[1] == '-e'):
+    if (sys.argv[1] == '--command' or sys.argv[1] == '-c'):
         c.execute("SELECT contextual_action FROM ContextualActionsByKey WHERE path LIKE ? AND aliases LIKE ?", (os.getcwd(), sys.argv[2]))
         row = c.fetchone()
         if row is None:
             print 'No contextual action found!'
         else:
             env_str = 'source ' + os.environ['HOME']+'/.profile && '
+            contextual_cmd = row[0]
             contextual_cmd = env_str + row[0]
+            print(contextual_cmd)
+    elif (sys.argv[1] == '--exec' or sys.argv[1] == '-e'):
+        c.execute("SELECT contextual_action FROM ContextualActionsByKey WHERE path LIKE ? AND aliases LIKE ?", (os.getcwd(), sys.argv[2]))
+        row = c.fetchone()
+        if row is None:
+            print 'No contextual action found!'
+        else:
+            env_str = 'source ' + os.environ['HOME']+'/.profile && '
+            contextual_cmd = row[0]
             print("Contextual action: " + contextual_cmd + '\n')
+            contextual_cmd = env_str + row[0]
             # cmd_output = subprocess.check_output(contextual_cmd, shell=True, executable='/bin/bash')
             # print cmd_output
             process = subprocess.Popen(contextual_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, executable='/bin/bash')
