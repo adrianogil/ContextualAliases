@@ -10,7 +10,7 @@ function execute_contextual_action()
     eval $action_command
 }
 
-all_ctx_aliases=$(python $CONTEXTUAL_ALIASES_DIR/src/context_aliases.py -u)
+all_ctx_aliases=$(python2 $CONTEXTUAL_ALIASES_DIR/src/context_aliases.py -u)
 for a in $all_ctx_aliases ; do
     alias $a="execute_contextual_action $a"
 done
