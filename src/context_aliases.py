@@ -33,6 +33,13 @@ def show_command(args, extra_args):
         contextual_cmd = env_str + row[0]
         print(contextual_cmd)
 
+def list_aliases(args, extra_args):
+    exec_query = "SELECT aliases FROM ContextualActionsByKey WHERE path LIKE ?  ORDER BY aliases"
+    exec_data = (os.getcwd(),)
+    c.execute(exec_query, exec_data)
+    for row in c:
+        print(str(row[0]))
+
 def save_alias(args, extra_args):
     # Save current path
     # print "Saving Current Path " + os.getcwd() + " string " + sys.argv[2]
@@ -88,6 +95,7 @@ def update_aliases(args, extra_args):
 
 commands_parse = {
     '-u'       : update_aliases,
+    '-l'       : list_aliases,
     '-s'       : save_alias,
     '-e'       : exec_alias,
     '-c'       : show_command,

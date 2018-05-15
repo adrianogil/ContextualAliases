@@ -20,4 +20,5 @@ ctx-actions -d <directory-alias>
 ctx-actions -l <directory-path>
 ```
 - List all saved aliases
+- Avoid adding the same alias for the same path
 
