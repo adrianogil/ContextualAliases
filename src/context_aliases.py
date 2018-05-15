@@ -69,6 +69,17 @@ def exec_alias(args, extra_args):
                 sys.stdout.write(out)
                 sys.stdout.flush()
 
+def delete_alias(args, extra_args):
+    alias_to_delete = args[0]
+    path_alias_to_delete = os.getcwd()
+
+    sql_query_delete = "DELETE FROM ContextualActionsByKey WHERE path LIKE ? AND aliases LIKE ?"
+    delete_data = (path_alias_to_delete, alias_to_delete)
+    c.execute(sql_query_delete, delete_data)
+    conn.commit()
+
+    print('Deleted alias!')
+
 def update_aliases(args, extra_args):
     c.execute("SELECT DISTINCT aliases from ContextualActionsByKey ORDER BY aliases")
     for row in c:
@@ -80,10 +91,12 @@ commands_parse = {
     '-s'       : save_alias,
     '-e'       : exec_alias,
     '-c'       : show_command,
+    '-d'       : delete_alias,
     '--exec'   : exec_alias,
     '--save'   : save_alias,
     '--update' : update_aliases,
     '--command': show_command,
+    '--delete' : delete_alias,
 }
 
 def parse_arguments():
