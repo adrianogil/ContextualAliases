@@ -22,3 +22,7 @@ ctx-actions -l <directory-path>
 - List all saved aliases
 - Avoid adding the same alias for the same path
 
+
+## See also
+
+- https://github.com/sebglazebrook/aliases

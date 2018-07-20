@@ -41,13 +41,25 @@ def list_aliases(args, extra_args):
         print(str(row[0]))
 
 def save_alias(args, extra_args):
-    # Save current path
-    # print "Saving Current Path " + os.getcwd() + " string " + sys.argv[2]
-    # dict_path = {":path" : os.getcwd(), ":key": sys.argv[2]}
-    # print dict_path
+    # Get args
+    current_path = os.getcwd()
+    alias_string = args[0]
+    contextual_action = args[1]
+
+    save_data = (current_path, alias_string, contextual_action)
+
+    exec_query = "SELECT contextual_action FROM ContextualActionsByKey WHERE path LIKE ? AND aliases LIKE ?"
+    exec_data = (current_path, alias_string)
+    c.execute(exec_query, exec_data)
+    row = c.fetchone()
+    if row is not None:
+        print("There already a saved alias in current path")
+        print("You should use -u option to update an alias")
+        return
+
     save_query = "INSERT INTO ContextualActionsByKey (path, aliases, contextual_action) " + \
                 "VALUES (:path, :aliases, :contextual_action)"
-    save_data = (os.getcwd(), args[0], args[1])
+    
     c.execute(save_query, save_data)
     conn.commit()
     # TODO: Check if alias was really saved
